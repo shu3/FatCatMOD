@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fatcat",
+  "name": "Fat Cat MOD",
+  "description": "FatCat MOD add fat cat mobs to Minecraft. You can breed a fat cat.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "TODO",
+  "updateUrl": "",
+  "authorList": ["shu3"],
+  "credits": "Made possible with help many niconico users",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,41 @@
+{
+  "purreow": {
+    "category": "neutral",
+    "sounds": [
+      "purreow1",
+      "purreow2"
+    ]
+  },
+  "hitt": {
+    "category": "neutral",
+    "sounds": [
+      "hitt1",
+      "hitt2",
+      "hitt3"
+    ]
+  },
+  "meow": {
+    "category": "neutral",
+    "sounds": [
+      "meow1",
+      "meow2",
+      "meow3",
+      "meow4"
+    ]
+  },
+  "unko": {
+    "category": "neutral",
+    "sounds": [
+      "unko1",
+      "unko2",
+      "unko3"
+    ]
+  },
+  "sleep": {
+    "category": "neutral",
+    "sounds": [
+      "sleep1",
+      "sleep2"
+    ]
+  }
+}
