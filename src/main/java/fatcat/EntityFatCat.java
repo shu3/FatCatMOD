@@ -228,7 +228,7 @@ public class EntityFatCat extends EntityTameable {
         	}
 		}
 
-        if (this.getMoveHelper().isUpdating())
+        if (this.getMoveHelper().isUpdating() && !this.isRiding())
         {
             double d0 = this.getMoveHelper().getSpeed();
 
