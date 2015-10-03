@@ -371,7 +371,7 @@ public class EntityFatCat extends EntityTameable {
 	public void eatEntityBounus(EntityItem food) {
 		Item item = food.getEntityItem().getItem();
 		if (item != null) {
-			if (item.getCreativeTab().getTabLabel().equals("food")) {
+			if (item.getCreativeTab() != null && item.getCreativeTab().getTabLabel().equals("food")) {
 				fatten(1, StatusChangeReason.Eat);
 				this.heal(getMaxHealth()/6);
 				setBladder(getBladder()+10, StatusChangeReason.Eat);

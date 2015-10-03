@@ -121,6 +121,10 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     			this.cat.getRNG().nextGaussian() * 0.15D, this.cat.getRNG().nextDouble() * 0.2D, this.cat.getRNG().nextGaussian() * 0.15D, 10,
     			new int[] {Item.getIdFromItem(food.getEntityItem().getItem())});
     	cat.worldObj.playSoundEffect(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D, "random.eat", 1.0F, 1.0F);
+    	// もしPlayerが取っても加算されないようにする
+    	if (food.getEntityItem() != null) {
+    		food.getEntityItem().stackSize = 0;
+    	}
     	food.setDead();
     }
     
