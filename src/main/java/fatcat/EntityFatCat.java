@@ -110,7 +110,7 @@ public class EntityFatCat extends EntityTameable {
 
 	public EntityFatCat(World world) {
 		super(world);
-        this.setSize(0.6F, 0.5F);
+		this.setSize(0.9F, 1.0F);
 		this.setCatScale();
 		this.setAvoidWaters(true);
         this.setTamed(true);
@@ -435,6 +435,9 @@ public class EntityFatCat extends EntityTameable {
 		this.setFriendship(table.getInteger("Friendship"),StatusChangeReason.FromNBT);
 		this.setSkinType(table.getInteger("SkinType"));
 		this.setLoveness(table.getInteger("Love"),StatusChangeReason.FromNBT);
+
+		this.setCatScale();
+
 		FatCatMod.proxy.log(this.worldObj, "readEntityToNBT: %s", table.toString());
 	}
 	
@@ -845,5 +848,20 @@ public class EntityFatCat extends EntityTameable {
     		tag.setStackDisplayName(this.getCustomNameTag());
     		entityDropItem(tag, 0.0F);
     	}
+    }
+    
+    @Override
+    /*
+     * パラメータ変更時に呼び出される。サイズを変更する。
+     * @see net.minecraft.entity.Entity#func_145781_i(int)
+     */
+    public void func_145781_i(int id)
+    {
+        super.func_145781_i(id);
+
+        if (id == WEIGHT_DATA_INDEX)
+        {
+        	setCatScale();
+        }
     }
 }
