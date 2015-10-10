@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemLead;
 import net.minecraft.item.ItemNameTag;
 import net.minecraft.item.ItemReed;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
 
 // Find near food entity and eat it.
@@ -105,7 +106,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
         if ((this.giveuptime%10) == 0) {
         	boolean tried = this.cat.getNavigator().tryMoveToEntityLiving(this.closestItem, speed);
         }
-        if (this.cat.getDistanceSqToEntity(this.closestItem) < 1.0D) {
+        if (isCollideEntityItem(this.cat, this.closestItem)) {
         	this.eatEntityItem(this.closestItem);
         	this.cat.eatEntityBounus(this.closestItem);
         }
@@ -132,5 +133,11 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     	return (food != null && !(food instanceof ItemFatCatUnko) &&
     			!(food instanceof ItemFurball) && !(food instanceof ItemLead) &&
     			!(food instanceof ItemNameTag));
+    }
+    
+    private boolean isCollideEntityItem(EntityFatCat cat, Entity item) {
+    	AxisAlignedBB axisalignedbb = cat.getEntityBoundingBox().expand(1.0D, 1.0D, 1.0D);
+    	List list = cat.worldObj.getEntitiesWithinAABBExcludingEntity(cat, axisalignedbb);
+    	return list.contains(item);
     }
 }
