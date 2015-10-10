@@ -85,7 +85,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
         this.cat.setAISit(false);
         this.cat.setSitting(false);
         this.cat.setSprinting(true);
-        this.cat.cancelSleep();
+        this.cat.cancelPose();
     }
 
     /**

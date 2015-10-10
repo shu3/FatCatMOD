@@ -71,7 +71,7 @@ public class EntityAIShit extends EntityAIBase {
 		giveuptime = 200;
 		unkoCountDown = 0;
 		cat.setAISit(false);
-		this.cat.cancelSleep();
+		this.cat.cancelPose();
 	}
 	
 	@Override

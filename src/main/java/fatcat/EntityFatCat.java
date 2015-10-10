@@ -350,7 +350,7 @@ public class EntityFatCat extends EntityTameable {
     protected String getHurtSound()
     {
 		setFace(Face.Myau);
-		cancelSleep();
+		cancelPose();
         return FatCatMod.MODID + ":hitt";
     }
 
@@ -747,8 +747,10 @@ public class EntityFatCat extends EntityTameable {
 		setBladder(0, StatusChangeReason.Unkoed);
 	}
 	
-	public void cancelSleep() {
+	public void cancelPose() {
 		aiSleep.tryWakeup = true;
+		brushingTick = 0;
+		setPose(Pose.None);
 	}
 	
 	public boolean isInSleep() {
