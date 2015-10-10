@@ -1,6 +1,7 @@
 package fatcat.ai;
 
 import fatcat.EntityFatCat;
+import fatcat.FatCatMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockPressurePlate;
@@ -53,13 +54,16 @@ public class EntityAIFatCatSit extends EntityAIBase {
 
 	private void findSitSpot() {
 		Block block;
+		double closestPosDistance = 100.0D;
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 3; y++) {
 				for (int z = 0; z < 16; z++) {
 					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
-					if (checkBlock(findType, pos) && (cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord) > 1.0D)) {
-						// System.out.println("EntityAIFatCatSit: found "+ pos);
+					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+					if (checkBlock(findType, pos) && (d > 1.0D) && (d < closestPosDistance)) {
+						FatCatMod.proxy.log(cat.worldObj, "EntityAIFatCatSit: found=<%s>", pos);
 						this.closestPlatePos = pos;
+						closestPosDistance = d;
 					}
 				}
 			}
@@ -72,7 +76,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
      */
     public boolean continueExecuting()
     {
-        if (!(cat.getDistance(closestPlatePos.xCoord, closestPlatePos.yCoord, closestPlatePos.zCoord) < 1.0D) && this.giveuptime > 0 && checkBlock(findType, closestPlatePos)) {
+        if (!(cat.getDistanceSqToCenter(new BlockPos(closestPlatePos).offsetUp()) < 1.0D) && this.giveuptime > 0 && checkBlock(findType, closestPlatePos)) {
         	return true;
         }
         else {
@@ -104,9 +108,9 @@ public class EntityAIFatCatSit extends EntityAIBase {
      */
     public void updateTask()
     {
-        this.cat.getLookHelper().setLookPosition(this.closestPlatePos.xCoord, this.closestPlatePos.yCoord, this.closestPlatePos.zCoord, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.closestPlatePos.xCoord+0.5, this.closestPlatePos.yCoord, this.closestPlatePos.zCoord+0.5, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
-        	this.cat.getNavigator().tryMoveToXYZ(this.closestPlatePos.xCoord, this.closestPlatePos.yCoord+2, this.closestPlatePos.zCoord, 0.3f);
+        	this.cat.getNavigator().tryMoveToXYZ(this.closestPlatePos.xCoord+0.5, this.closestPlatePos.yCoord+1, this.closestPlatePos.zCoord+0.5, 0.3f);
         }
         --this.giveuptime;
     }

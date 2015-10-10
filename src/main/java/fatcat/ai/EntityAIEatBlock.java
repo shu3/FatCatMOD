@@ -50,14 +50,16 @@ public class EntityAIEatBlock extends EntityAIBase {
 
 	private void findBlock() {
 		Block block;
+		double closestPosDistance = 100.0D;
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 3; y++) {
 				for (int z = 0; z < 16; z++) {
 					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
-					if (checkBlock(pos) && (cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord) > 1.0D)) {
+					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+					if (checkBlock(pos) && (d > 1.0D) && (d < closestPosDistance)) {
 						FatCatMod.proxy.log(this.world, "EntityAIEatBlock: found %s", pos.toString());
 						this.closestPos = pos;
-						return;
+						closestPosDistance = d;
 					}
 				}
 			}
@@ -102,11 +104,11 @@ public class EntityAIEatBlock extends EntityAIBase {
      */
     public void updateTask()
     {
-        this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord, this.closestPos.yCoord, this.closestPos.zCoord, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord+0.5, this.closestPos.yCoord, this.closestPos.zCoord+0.5, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
-        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord+2, this.closestPos.zCoord, 0.5f);
+        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord+0.5, this.closestPos.yCoord+1, this.closestPos.zCoord+0.5, 0.5f);
         }
-        if (cat.getDistance(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord) < 1.0D) {
+        if (cat.getDistanceSqToCenter(new BlockPos(closestPos)) < 1.0D) {
         	this.cat.eatBlockBounus(world.getBlockState(new BlockPos(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord)).getBlock());
         	this.world.destroyBlock(new BlockPos(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord), false);
         	this.giveuptime = 0;

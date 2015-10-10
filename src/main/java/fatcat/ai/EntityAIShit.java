@@ -1,6 +1,7 @@
 package fatcat.ai;
 
 import fatcat.EntityFatCat;
+import fatcat.FatCatMod;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
@@ -48,7 +49,7 @@ public class EntityAIShit extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting() {
-//		System.out.println("EntityAIShit: animatetime:"+(animatetime > 0)+",giveuptime:"+(giveuptime > 0)+",checkBlock:"+(checkBlock(closestPos)));
+//		System.out.println("EntityAIShit: giveuptime:"+(giveuptime > 0)+",checkBlock:"+(checkBlock(closestPos)));
 		if (unkoCountDown > 0 || (giveuptime > 0 && checkBlock(closestPos))) {
 			return true;
 		}
@@ -86,12 +87,12 @@ public class EntityAIShit extends EntityAIBase {
 			return;
 		}
 		
-        this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord, this.closestPos.yCoord, this.closestPos.zCoord, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord+0.5D, this.closestPos.yCoord, this.closestPos.zCoord+0.5D, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
-        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord+2, this.closestPos.zCoord, 0.3f);
+        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord+0.5D, this.closestPos.yCoord+1, this.closestPos.zCoord+0.5D, 0.3f);
         }
 //        System.out.println("EntityAIShit distance: " + this.closestPos.toString() + ", distance=" + cat.getDistance(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord));
-        if (cat.getDistance(closestPos.xCoord, closestPos.yCoord+1.0D, closestPos.zCoord) < 1.0D) {
+        if (cat.getDistanceSqToCenter(new BlockPos(closestPos).offsetUp()) < 1.0D) {
         	unkoCountDown = 60;
 			giveuptime = 0;
 //        	System.out.println("EntityAIShit: set Unko Countdown");
@@ -102,14 +103,17 @@ public class EntityAIShit extends EntityAIBase {
 
 	private void findBlock() {
 		Block block;
+		double closestPosDistance = 100.0D;
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 3; y++) {
 				for (int z = 0; z < 16; z++) {
 					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
-					if (checkBlock(pos) && (cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord) > 1.0D)) {
-//						System.out.println("EntityAIShit: found "+ pos);
+					Vec3 catPos = new Vec3(cat.posX,cat.posY, cat.posZ);
+					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+					if (checkBlock(pos) && (d < closestPosDistance)) {
+						FatCatMod.proxy.log(cat.worldObj, "EntityAIShit: found=<%s>, cat=<%s>", pos, catPos);
 						this.closestPos = pos;
-						return;
+						closestPosDistance = d;
 					}
 				}
 			}
