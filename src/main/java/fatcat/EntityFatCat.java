@@ -643,6 +643,10 @@ public class EntityFatCat extends EntityTameable {
 				if (type >= FatCatMod.instance.skinTypes.size()) type = 0;
 				setSkinType(FatCatMod.instance.skinTypes.get(type));
 				return true;
+			} else if (itemstack.getItem() == Items.bone) {
+				setHunger(getHunger()-HUNGER_MAX/5, StatusChangeReason.Debug);
+				this.generateRandomParticles(EnumParticleTypes.HEART);
+				return true;
 			} else if (itemstack.getItem() == Items.apple) {
 				setLoveness(getLoveness()+500, StatusChangeReason.Debug);
 				this.generateRandomParticles(EnumParticleTypes.HEART);
