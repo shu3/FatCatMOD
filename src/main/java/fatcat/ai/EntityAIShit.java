@@ -104,8 +104,8 @@ public class EntityAIShit extends EntityAIBase {
 	private void findBlock() {
 		Block block;
 		double closestPosDistance = 100.0D;
-		for (int x = 0; x < 16; x++) {
-			for (int y = 0; y < 3; y++) {
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
 					Vec3 catPos = new Vec3(cat.posX,cat.posY, cat.posZ);
@@ -116,6 +116,9 @@ public class EntityAIShit extends EntityAIBase {
 						closestPosDistance = d;
 					}
 				}
+			}
+			if (closestPosDistance < 100.0D) {
+				return;
 			}
 		}
 	}
