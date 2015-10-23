@@ -688,7 +688,7 @@ public class EntityFatCat extends EntityTameable {
 				dropItem(FatCatMod.furball, 1);
 			}
 		}
-		else if (getRNG().nextInt(30) == 0) {
+		else if (getRNG().nextInt(100) == 50) {
 			setFriendship(getFriendship()-FRIENDSHIP_MAX/10, StatusChangeReason.Brushing);
 			generateRandomParticles(EnumParticleTypes.VILLAGER_ANGRY);
 			setPose(Pose.None);
