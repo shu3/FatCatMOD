@@ -619,6 +619,16 @@ public class EntityFatCat extends EntityTameable {
         return false;
 	}
 	
+	/**
+	 * 小麦などでinteractされるのを回避するためBreedingItemは常にfalse
+	 */
+	@Override
+	public boolean isBreedingItem(ItemStack p_70877_1_)
+	{
+		return false;
+	}
+
+	
 	/* デバッグモード 
 	 * シャベル: wooden weight-, iron weight+
 	 * ピッケル: wooden skin-, iron skin+
