@@ -53,7 +53,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 				Item food = this.closestItem.getEntityItem().getItem();
 				res = isFindableItem(food);
 				// 食べ物以外は餓死寸前の状態だと食べてしまう
-				if (res && !food.getCreativeTab().getTabLabel().equals("food")) {
+				if (res && !cat.isFoodItem(food)) {
 					FatCatMod.proxy.log(this.cat.worldObj, "EntityAIEatEntityItem: shouldExecute() -> non food(%s), starved(%s)", food.toString(), cat.isStarved());
 					res = this.cat.isStarved();
 				}

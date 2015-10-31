@@ -367,11 +367,11 @@ public class EntityFatCat extends EntityTameable {
     public void setAISit(boolean sit) {
     	this.aiSit.setSitting(sit);
     }
-
+    
 	public void eatEntityBounus(EntityItem food) {
 		Item item = food.getEntityItem().getItem();
 		if (item != null) {
-			if (item.getCreativeTab() != null && item.getCreativeTab().getTabLabel().equals("food")) {
+			if (isFoodItem(item)) {
 				fatten(1, StatusChangeReason.Eat);
 				this.heal(getMaxHealth()/6);
 				setBladder(getBladder()+10, StatusChangeReason.Eat);
@@ -388,6 +388,10 @@ public class EntityFatCat extends EntityTameable {
 				generateRandomParticles(EnumParticleTypes.SMOKE_NORMAL);
 			}
 		}
+	}
+
+	public boolean isFoodItem(Item item) {
+		return item.getCreativeTab() != null && item.getCreativeTab().getTabLabel().equals("food");
 	}
 	
 	public void eatBlockBounus(Block block) {

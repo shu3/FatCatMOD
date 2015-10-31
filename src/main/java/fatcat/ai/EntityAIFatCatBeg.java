@@ -92,9 +92,9 @@ public class EntityAIFatCatBeg extends EntityAIBase {
     private boolean hasPlayerGotFoodInHand(EntityPlayer player)
     {
         ItemStack itemstack = player.inventory.getCurrentItem();
-        if (itemstack == null || itemstack.getItem() == null || itemstack.getItem().getCreativeTab() == null) {
+        if (itemstack == null || itemstack.getItem() == null) {
         	return false;
         }
-        return itemstack.getItem().getCreativeTab().getTabLabel().equals("food");
+        return cat.isFoodItem(itemstack.getItem());
     }
 }
