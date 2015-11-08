@@ -59,6 +59,7 @@ public class EntityFatCat extends EntityTameable {
 	public static final int LOVENESS_MAX = 2000;
 	public static final int HUNGER_MAX = 100;
 	public static final int BLADDER_MAX = 100;
+	public static final int WEIGHT_STATUS_ADULT = 4000;
 	public static final int WEIGHT_STATUS_MAX = 10000;
 	public static final int HOUR_TICK = 1000;
 	private int blinkTick = 0;
@@ -172,6 +173,10 @@ public class EntityFatCat extends EntityTameable {
 		return (EntityFatCat)createChild((EntityAgeable)mate);
 	}
 
+	@Override
+	public boolean isChild() {
+		return getWeight() < WEIGHT_STATUS_ADULT;
+	}
 	
 	@Override
 	public void onUpdate() {
@@ -405,14 +410,17 @@ public class EntityFatCat extends EntityTameable {
 		}
 	}
 	
-	private void _eat() {
-	}
-	
 	// 太る(体重が重いほど太りづらい）
 	private void fatten(int rate, StatusChangeReason reason) {
-		int unit = 40 * rate;
-		int max = WEIGHT_STATUS_MAX * 2;
-		int add = (int)(unit * (1.0F - (getWeight()/max)));
+		int add = 0;
+		int unit = 150 * rate;
+		if (isChild()) {
+			add = unit;
+		}
+		else {
+			int max = WEIGHT_STATUS_MAX * 2;
+			add = (int)(unit * (1.0F - (getWeight()/max)));
+		}
 		setWeight(getWeight()+add, reason);
 	}
 

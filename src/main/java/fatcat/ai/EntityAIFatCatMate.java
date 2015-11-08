@@ -101,7 +101,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
 
 	private boolean checkSufficientMating(EntityFatCat cat) {
 //		System.out.println("EntityAIFatCatMate(checkSufficientMating): weight="+cat.getWeight()+",loveness="+cat.getLoveness());
-		return (cat != null) && (cat.getWeight() > CAT_MIN_WEIGHT) && (cat.getLoveness() >= EntityFatCat.LOVENESS_MAX);
+		return (cat != null) && (!cat.isChild()) && (cat.getLoveness() >= EntityFatCat.LOVENESS_MAX);
 	}
 
     private void giveBirth()
