@@ -34,8 +34,8 @@ public class EntityAIShit extends EntityAIBase {
 		else if (closestPos != null) {
 			tryFind = false;
 		}
-		else if (cat.getBladder() > 60 && cat.getRNG().nextFloat() > 0.001F) {
-			tryFind = false;
+		else if (cat.getBladder() > 80 && (cat.ticksExisted % 100) == 0) {
+			tryFind = true;
 		}
 		
 		if (!tryFind) {
