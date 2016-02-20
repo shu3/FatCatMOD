@@ -515,7 +515,7 @@ public class EntityFatCat extends EntityTameable {
 
 		// 便意MAX以上だとダメージ
 		if (bladder > 100) {
-			attackEntityFrom(DamageSource.generic, 5.0F);
+			attackEntityFrom(DamageSource.generic, 2.0F);
 			bladder = 100;
 		}
 		if (bladder < 0) {
