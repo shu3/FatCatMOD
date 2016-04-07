@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "fatcat:items/furball"
+        "layer0": "fatcat:items/fatcat_turd"
     },
     "display": {
         "thirdperson": {

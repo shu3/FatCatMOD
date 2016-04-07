@@ -1,31 +1,31 @@
 package fatcat.ai;
 
-import fatcat.EntityFatCat;
-import fatcat.EntityFatCat.StatusChangeReason;
-import net.minecraft.block.Block;
+import fatcat.entitiy.EntityFatCat;
+import fatcat.entitiy.EntityFatCat.StatusChangeReason;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /* Try to sleep */
-public class EntityAIFatCatSleep extends EntityAIBase {
-	private EntityFatCat cat;
-	private World world;
-	public boolean tryWakeup = false;
-	
-	public EntityAIFatCatSleep(EntityFatCat cat) {
-		this.cat = cat;
-		this.world = cat.worldObj;
-		this.setMutexBits(16);
-	}
+public class EntityAIFatCatSleep extends EntityAIBase
+{
 
-	@Override
-	public boolean shouldExecute() {
+    public boolean tryWakeup = false;
+    private EntityFatCat cat;
+    private World world;
+
+    public EntityAIFatCatSleep(EntityFatCat cat)
+    {
+        this.cat = cat;
+        this.world = cat.worldObj;
+        this.setMutexBits(16);
+    }
+
+    @Override
+    public boolean shouldExecute()
+    {
 //		System.out.println("EntityAIFatCatSleep: shouldExec="+(this.cat.getTiredness()));
-		return (this.cat.getTiredness() >= EntityFatCat.TIREDNESS_MAX);
-	}
-
+        return (this.cat.getTiredness() >= EntityFatCat.TIREDNESS_MAX);
+    }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
@@ -60,6 +60,7 @@ public class EntityAIFatCatSleep extends EntityAIBase {
      */
     public void updateTask()
     {
-    	this.cat.setTiredness(cat.getTiredness()-1, StatusChangeReason.Sleep);
+        this.cat.setTiredness(cat.getTiredness() - 1, StatusChangeReason.Sleep);
     }
+
 }

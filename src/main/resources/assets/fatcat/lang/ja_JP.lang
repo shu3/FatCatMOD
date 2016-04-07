@@ -1,8 +1,8 @@
 item.fatcat_egg.name=デブ猫たまご
-item.fatcat_unko.name=デブ猫うんこ
+item.fatcat_turd.name=デブ猫うんこ
 item.fatcat_brush.name=猫用ブラシ
-item.furball.name=毛玉
-item.fatcat_feather_toy.name=猫じゃらし
+item.fatcat_furBall.name=毛玉
+item.fatcat_featherToy.name=猫じゃらし
 fatcat.gui.status.noname=名無し
 fatcat.gui.status.weight=体重
 fatcat.gui.status.hunger=満腹度
@@ -10,4 +10,4 @@ fatcat.gui.status.bladder=便意
 fatcat.gui.status.health=HP
 fatcat.gui.status.tiredness=疲労度
 fatcat.gui.status.friendship=友好度
-fatcat.gui.status.loveness=恋愛度
+fatcat.gui.status.love=恋愛度

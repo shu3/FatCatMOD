@@ -1,6 +1,5 @@
-package fatcat;
+package fatcat.item;
 
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
@@ -11,39 +10,40 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.BonemealEvent;
 
-public class ItemFatCatUnko extends Item {
+public class ItemFatCatTurd extends Item
+{
 
-	public ItemFatCatUnko() {
-		super();
+    public ItemFatCatTurd()
+    {
+        super();
         this.setCreativeTab(CreativeTabs.tabMisc);
-	}
+    }
 
-	@Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (applyUnko(stack, worldIn, pos, playerIn))
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        if (applyTurd(stack, worldIn, pos, playerIn))
         {
             if (!worldIn.isRemote)
             {
                 worldIn.playAuxSFX(2005, pos, 0);
             }
-
             return true;
         }
         return false;
-	}
+    }
 
-	private boolean applyUnko(ItemStack stack, World worldIn, BlockPos pos, EntityPlayer player) {
+    private boolean applyTurd(ItemStack stack, World worldIn, BlockPos pos, EntityPlayer player)
+    {
         IBlockState iblockstate = worldIn.getBlockState(pos);
         Block block = iblockstate.getBlock();
 
         if (block instanceof IGrowable)
         {
-            IGrowable igrowable = (IGrowable)block;
+            IGrowable igrowable = (IGrowable) block;
 
-            if (igrowable.isStillGrowing(worldIn, pos, iblockstate, worldIn.isRemote))
+            if (igrowable.canGrow(worldIn, pos, iblockstate, worldIn.isRemote))
             {
                 if (!worldIn.isRemote)
                 {
@@ -54,11 +54,10 @@ public class ItemFatCatUnko extends Item {
 
                     --stack.stackSize;
                 }
-
                 return true;
             }
         }
-
         return false;
-	}
+    }
+
 }

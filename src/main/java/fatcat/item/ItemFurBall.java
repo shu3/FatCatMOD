@@ -1,12 +1,15 @@
-package fatcat;
+package fatcat.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-public class ItemFurball extends Item {
+public class ItemFurBall extends Item
+{
 
-	public ItemFurball() {
-		super();
+    public ItemFurBall()
+    {
+        super();
         this.setCreativeTab(CreativeTabs.tabMaterials);
-	}
+    }
+
 }

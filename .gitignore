@@ -1,7 +1,9 @@
-/bin/
+.gradle/
+.idea/
 eclipse/
 build/
-.classpath
-.project
-.gradle
-.settings
+gradle/
+out/
+forge-1.8-11.14.3.1450-src.iml
+gradlew
+gradlew.bat

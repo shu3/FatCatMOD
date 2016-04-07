@@ -1,40 +1,43 @@
 package fatcat.ai;
 
-import fatcat.EntityFatCat;
+import fatcat.entitiy.EntityFatCat;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 /* change interesting angle of neck */
-public class EntityAIFatCatBeg extends EntityAIBase {
-	private EntityFatCat cat;
+public class EntityAIFatCatBeg extends EntityAIBase
+{
+
+    private EntityFatCat cat;
     private EntityPlayer thePlayer;
     private World worldObject;
     private float minPlayerDistance;
     private int begTime;
     private int nextTime = 0;
 
-	public EntityAIFatCatBeg(EntityFatCat cat, float distance) {
-		this.cat = cat;
+    public EntityAIFatCatBeg(EntityFatCat cat, float distance)
+    {
+        this.cat = cat;
         this.worldObject = cat.worldObj;
         this.minPlayerDistance = distance;
-	}
+    }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     public boolean shouldExecute()
     {
-        this.thePlayer = this.worldObject.getClosestPlayerToEntity(this.cat, (double)this.minPlayerDistance);
-        if (nextTime > 0) {
-        	nextTime--;
-        	return false;
+        this.thePlayer = this.worldObject.getClosestPlayerToEntity(this.cat, (double) this.minPlayerDistance);
+        if (nextTime > 0)
+        {
+            nextTime--;
+            return false;
         }
-        else if (this.thePlayer == null || this.cat.isInSleep() || this.cat.getPose() != EntityFatCat.Pose.None) {
-        	return false;
+        else if (this.thePlayer == null || this.cat.isInSleep() || this.cat.getPose() != EntityFatCat.Pose.None)
+        {
+            return false;
         }
 //        System.out.println("EntityAIFatCatBeg: shouldExecute(): food="+this.hasPlayerGotFoodInHand(this.thePlayer));
         return this.hasPlayerGotFoodInHand(this.thePlayer);
@@ -45,17 +48,7 @@ public class EntityAIFatCatBeg extends EntityAIBase {
      */
     public boolean continueExecuting()
     {
-    	if (this.thePlayer.isEntityAlive()) {
-    		if ((this.cat.getDistanceSqToEntity(this.thePlayer) > (double)(this.minPlayerDistance * this.minPlayerDistance))) {
-    			return false;
-    		}
-    		else {
-    			return this.begTime > 0 && this.hasPlayerGotFoodInHand(this.thePlayer);
-    		}
-    	}
-    	else {
-    		return false;
-    	}
+        return this.thePlayer.isEntityAlive() && this.cat.getDistanceSqToEntity(this.thePlayer) <= (double) (this.minPlayerDistance * this.minPlayerDistance) && this.begTime > 0 && this.hasPlayerGotFoodInHand(this.thePlayer);
     }
 
     /**
@@ -82,7 +75,7 @@ public class EntityAIFatCatBeg extends EntityAIBase {
      */
     public void updateTask()
     {
-        this.cat.getLookHelper().setLookPosition(this.thePlayer.posX, this.thePlayer.posY + (double)this.thePlayer.getEyeHeight(), this.thePlayer.posZ, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.thePlayer.posX, this.thePlayer.posY + (double) this.thePlayer.getEyeHeight(), this.thePlayer.posZ, 10.0F, (float) this.cat.getVerticalFaceSpeed());
         --this.begTime;
     }
 
@@ -92,9 +85,7 @@ public class EntityAIFatCatBeg extends EntityAIBase {
     private boolean hasPlayerGotFoodInHand(EntityPlayer player)
     {
         ItemStack itemstack = player.inventory.getCurrentItem();
-        if (itemstack == null || itemstack.getItem() == null) {
-        	return false;
-        }
-        return cat.isFoodItem(itemstack.getItem());
+        return !(itemstack == null || itemstack.getItem() == null) && cat.isFoodItem(itemstack.getItem());
     }
+
 }
