@@ -1,53 +1,39 @@
 package fatcat;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import scala.actors.threadpool.Arrays;
-import scala.util.matching.Regex;
-import net.minecraft.client.model.ModelOcelot;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderOcelot;
+import fatcat.gui.GuiStatusHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultResourcePack;
-import net.minecraft.entity.passive.EntityOcelot;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import fatcat.gui.GuiStatus;
-import fatcat.gui.GuiStatusHandler;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Mod(modid = FatCatMod.MODID, version = FatCatMod.VERSION)
 public class FatCatMod {
@@ -76,13 +62,15 @@ public class FatCatMod {
 	public static FatCatMod instance;
 	@SidedProxy(clientSide = "fatcat.ClientProxy", serverSide = "fatcat.CommonProxy")
 	public static CommonProxy proxy;
-	
+
+    static final File fatcatResourceDir = new File("fatcatResource");
 	public Map<Integer, String> skinMap;
 	public List<Integer> skinTypes;
 
     @EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+        if (!fatcatResourceDir.exists()) fatcatResourceDir.mkdirs();
     	egg = new ItemFatCatEgg().setUnlocalizedName("fatcat_egg");
     	unko = new ItemFatCatUnko().setUnlocalizedName("fatcat_unko");
     	brush = new ItemCatBrush().setUnlocalizedName("fatcat_brush");
@@ -136,6 +124,8 @@ public class FatCatMod {
     public void load(FMLInitializationEvent event) {
     	proxy.registerRenderers();
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiStatusHandler());
+        List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks");
+        defaultResourcePacks.add(new FatCatResourcePack());
     	initSkinMap();
     }
     
@@ -179,7 +169,11 @@ public class FatCatMod {
 		} else {
 			System.out.println("Error: unsupported protocol: " + protocol);
 		}
-
+        for (File file : fatcatResourceDir.listFiles())
+        {
+            String name = file.getName();
+            files.add(name);
+        }
 		skinTypes = detectSkinFiles(files);
 	}
 
@@ -203,6 +197,16 @@ public class FatCatMod {
 					types.add(i);
 				}
 			}
+            else
+            {
+                Integer i = Integer.parseInt(png.substring(0, 3));
+                if (i < 97)
+                {
+                    continue;
+                }
+                skinMap.put(i, "fatcat:" + png);
+                types.add(i);
+            }
 		}
 		java.util.Collections.sort(types);
 		return types;
