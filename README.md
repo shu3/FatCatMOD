@@ -157,4 +157,10 @@
   * joke/020-smoist.png
 * 色
   * normal/096-battleship.png
+  
+## コードコントリビュート
+
+* setuga
+  * 自作テクスチャ読み込みの原案
+
 
