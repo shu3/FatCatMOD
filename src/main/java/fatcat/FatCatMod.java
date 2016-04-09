@@ -1,34 +1,13 @@
 package fatcat;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import scala.actors.threadpool.Arrays;
-import scala.util.matching.Regex;
-import net.minecraft.client.model.ModelOcelot;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderOcelot;
-import net.minecraft.client.resources.DefaultResourcePack;
-import net.minecraft.entity.passive.EntityOcelot;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.ChestGenHooks;
@@ -46,8 +25,8 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import fatcat.gui.GuiStatus;
 import fatcat.gui.GuiStatusHandler;
+import fatcat.model.CatSkinLoader;
 
 @Mod(modid = FatCatMod.MODID, version = FatCatMod.VERSION)
 public class FatCatMod {
@@ -77,8 +56,9 @@ public class FatCatMod {
 	@SidedProxy(clientSide = "fatcat.ClientProxy", serverSide = "fatcat.CommonProxy")
 	public static CommonProxy proxy;
 	
-	public Map<String, String> skinMap;
-	public List<String> skinTypes;
+	private Map<String, String> skinMap;
+	private List<String> skinTypes;
+	private CatSkinLoader skinLoader;
 
     @EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -136,75 +116,17 @@ public class FatCatMod {
     public void load(FMLInitializationEvent event) {
     	proxy.registerRenderers();
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiStatusHandler());
-    	initSkinMap();
     }
-    
-    private void initSkinMap() {
-		skinMap = new HashMap<String, String>();
-		ArrayList<String> files = new ArrayList<String>();
-		URL path = DefaultResourcePack.class.getResource("/assets/fatcat/textures/models/cat/");
-		String protocol = path.getProtocol();
-		
-		if ("file".equals(protocol)) {
-			File modelDir = new File(path.getPath());
-			for (File f : modelDir.listFiles()) {
-				if (f.isDirectory()) {
-					for (File skin : f.listFiles()) {
-						files.add(skin.toURI().toString());
-					}
-				}
-			}
-//			System.out.println(files.toString());
-		} else if ("jar".equals(protocol)) {
-	        JarURLConnection jarUrlConnection = null;
-	        JarFile jarFile = null;
-	        try {
-	        	try {
-	        		jarUrlConnection = (JarURLConnection)path.openConnection();
 
-	        		jarFile = jarUrlConnection.getJarFile();
-	        		for (Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();) {
-	        			JarEntry entry = e.nextElement();
-	        			files.add(entry.getName());
-	        		}
-
-	        	} finally {
-	        		if (jarFile != null) {
-	        			jarFile.close();
-	        		}
-	        	}
-	        } catch (IOException e) {
-	        	e.printStackTrace();
-	        }
-		} else {
-			System.out.println("Error: unsupported protocol: " + protocol);
-		}
-
-		skinTypes = detectSkinFiles(files);
+	public List<String> getSkinTypes() {
+		return skinLoader.getSkinTypes();
 	}
 
-	private ArrayList<String> detectSkinFiles(ArrayList<String> files) {
-		ArrayList<String> types = new ArrayList<String>();
-		Pattern integerRx = Pattern.compile(".*?/(\\d+)-.*\\.png$");
-		Pattern nameRx = Pattern.compile(".*assets/fatcat/textures/models/cat/(.*\\.png)$");
-		for (String png : files) {
-			Matcher m = nameRx.matcher(png);
-//			System.out.println("m=<"+m+">,png=<"+png+">");
-			if (m.find()) {
-				String name = m.group(1);
-				Matcher m1 = integerRx.matcher(name);
-				if (m1.find()) {
-					Integer i = Integer.parseInt(m1.group(1));
-					if (name.contains("joke")) {
-						i += 1000;
-					} 
-//					System.out.println("name=<"+name+">,i=<"+i.toString()+">");
-					skinMap.put(i.toString(), "fatcat:textures/models/cat/" + name);
-					types.add(i.toString());
-				}
-			}
-		}
-		java.util.Collections.sort(types);
-		return types;
+	public Map<String, String> getSkinMap() {
+		return skinLoader.getSkinMap();
+	}
+	
+	public void setSkinLoader(CatSkinLoader loader) {
+		this.skinLoader = loader;
 	}
 }

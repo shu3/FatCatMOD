@@ -10,6 +10,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import fatcat.gui.GuiStatusHandler;
+import fatcat.model.CatSkinLoader;
 import fatcat.model.RenderFatCat;
 
 public class ClientProxy extends CommonProxy {
@@ -17,6 +18,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderers() {
         registerEntityRenderers();
     	registerItemRenderers();
+    	FatCatMod.instance.setSkinLoader(new CatSkinLoader());
 	}
 	
 	@Override
