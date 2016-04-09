@@ -77,8 +77,8 @@ public class FatCatMod {
 	@SidedProxy(clientSide = "fatcat.ClientProxy", serverSide = "fatcat.CommonProxy")
 	public static CommonProxy proxy;
 	
-	public Map<Integer, String> skinMap;
-	public List<Integer> skinTypes;
+	public Map<String, String> skinMap;
+	public List<String> skinTypes;
 
     @EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -140,7 +140,7 @@ public class FatCatMod {
     }
     
     private void initSkinMap() {
-		skinMap = new HashMap<Integer, String>();
+		skinMap = new HashMap<String, String>();
 		ArrayList<String> files = new ArrayList<String>();
 		URL path = DefaultResourcePack.class.getResource("/assets/fatcat/textures/models/cat/");
 		String protocol = path.getProtocol();
@@ -183,8 +183,8 @@ public class FatCatMod {
 		skinTypes = detectSkinFiles(files);
 	}
 
-	private ArrayList<Integer> detectSkinFiles(ArrayList<String> files) {
-		ArrayList<Integer> types = new ArrayList<Integer>();
+	private ArrayList<String> detectSkinFiles(ArrayList<String> files) {
+		ArrayList<String> types = new ArrayList<String>();
 		Pattern integerRx = Pattern.compile(".*?/(\\d+)-.*\\.png$");
 		Pattern nameRx = Pattern.compile(".*assets/fatcat/textures/models/cat/(.*\\.png)$");
 		for (String png : files) {
@@ -199,8 +199,8 @@ public class FatCatMod {
 						i += 1000;
 					} 
 //					System.out.println("name=<"+name+">,i=<"+i.toString()+">");
-					skinMap.put(i, "fatcat:textures/models/cat/" + name);
-					types.add(i);
+					skinMap.put(i.toString(), "fatcat:textures/models/cat/" + name);
+					types.add(i.toString());
 				}
 			}
 		}

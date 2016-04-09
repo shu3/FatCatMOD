@@ -432,7 +432,7 @@ public class EntityFatCat extends EntityTameable {
 		table.setInteger("Bladder", getBladder());
 		table.setInteger("Tiredness", getTiredness());
 		table.setInteger("Friendship", getFriendship());
-		table.setInteger("SkinType", getSkinType());
+		table.setString("SkinId", getSkinId());
 		table.setInteger("Love", getLoveness());
 		FatCatMod.proxy.log(this.worldObj, "writeEntityToNBT: %s", table.toString());
 	}
@@ -445,7 +445,13 @@ public class EntityFatCat extends EntityTameable {
 		this.setBladder(table.getInteger("Bladder"),StatusChangeReason.FromNBT);
 		this.setTiredness(table.getInteger("Tiredness"),StatusChangeReason.FromNBT);
 		this.setFriendship(table.getInteger("Friendship"),StatusChangeReason.FromNBT);
-		this.setSkinType(table.getInteger("SkinType"));
+		if (table.hasKey("SkinType")) {
+			// SkinType廃止、互換性維持のため変換
+			this.setSkinId(String.valueOf(table.getInteger("SkinType")));
+		}
+		else {
+			this.setSkinId(table.getString("SkinId"));
+		}
 		this.setLoveness(table.getInteger("Love"),StatusChangeReason.FromNBT);
 
 		this.setCatScale();
@@ -571,18 +577,15 @@ public class EntityFatCat extends EntityTameable {
 		this.dataWatcher.updateObject(FRIENDSHIP_DATA_INDEX, friendship);
 	}
 	
-	// Type of skin
-	public int getSkinType() {
-		return this.dataWatcher.getWatchableObjectInt(SKIN_DATA_INDEX);
+	// ID of skin
+	public String getSkinId() {
+		return this.dataWatcher.getWatchableObjectString(SKIN_DATA_INDEX);
 	}
 	
-	public void setSkinType(int type) {
-		Integer max = FatCatMod.instance.skinTypes.get(FatCatMod.instance.skinTypes.size()-1);
-		if (type > max) {
-			type = 0;
-		}
-		if (type < 0) {
-			type = max;
+	public void setSkinId(String type) {
+		if (!FatCatMod.instance.skinMap.containsKey(type)) {
+			// set default skin
+			type = FatCatMod.instance.skinTypes.get(0);
 		}
 		this.dataWatcher.updateObject(SKIN_DATA_INDEX, type);
 	}
@@ -659,14 +662,14 @@ public class EntityFatCat extends EntityTameable {
 				setWeight(getWeight()+500, StatusChangeReason.Debug);
 				return true;
 			} else if (itemstack.getItem() == Items.wooden_pickaxe) {
-				int type = FatCatMod.instance.skinTypes.indexOf(getSkinType())-1;
+				int type = FatCatMod.instance.skinTypes.indexOf(getSkinId())-1;
 				if (type < 0) type = FatCatMod.instance.skinTypes.size()-1;
-				setSkinType(FatCatMod.instance.skinTypes.get(type));
+				setSkinId(FatCatMod.instance.skinTypes.get(type));
 				return true;
 			} else if (itemstack.getItem() == Items.iron_pickaxe) {
-				int type = FatCatMod.instance.skinTypes.indexOf(getSkinType())+1;
+				int type = FatCatMod.instance.skinTypes.indexOf(getSkinId())+1;
 				if (type >= FatCatMod.instance.skinTypes.size()) type = 0;
-				setSkinType(FatCatMod.instance.skinTypes.get(type));
+				setSkinId(FatCatMod.instance.skinTypes.get(type));
 				return true;
 			} else if (itemstack.getItem() == Items.bone) {
 				setHunger(getHunger()-HUNGER_MAX/5, StatusChangeReason.Debug);

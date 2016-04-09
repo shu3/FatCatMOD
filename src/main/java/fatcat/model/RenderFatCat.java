@@ -30,8 +30,8 @@ public class RenderFatCat extends RendererLivingEntity {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity cat) {
-		int type = ((EntityFatCat)cat).getSkinType();
-		String location = FatCatMod.instance.skinMap.get(type);
+		String id = ((EntityFatCat)cat).getSkinId();
+		String location = FatCatMod.instance.skinMap.get(id);
 		if (null != location) {
 			return new ResourceLocation(location);
 		} else {
